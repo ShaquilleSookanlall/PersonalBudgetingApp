@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "608693202162",
+    "project_id": "personalbudgetingapp-b9cdc",
+    "storage_bucket": "personalbudgetingapp-b9cdc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:608693202162:android:90793e46cf5c1ddfdcf46b",
+        "android_client_info": {
+          "package_name": "com.example.personalbudgetingapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuwDQCYP03Ipn5ma_zjJ1R2lcVXprc3hY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <!-- Large App Logo -->
+        <ImageView
+            android:id="@+id/ivAppLogo"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_marginTop="64dp"
+            android:src="@mipmap/logo"
+            android:contentDescription="App Logo"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+
+        <!-- Bottom Decorative Image -->
+
+        <!-- Loader: 4 jumping dots -->
+        <LinearLayout
+            android:id="@+id/dotLoader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="76dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/ivAppLogo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <View
+                android:id="@+id/dot1"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_margin="6dp"
+                android:background="@drawable/circle"
+                android:backgroundTint="#B0C4C4" />
+
+            <View
+                android:id="@+id/dot2"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_margin="6dp"
+                android:background="@drawable/circle"
+                android:backgroundTint="#B0C4C4" />
+
+            <View
+                android:id="@+id/dot3"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_margin="6dp"
+                android:background="@drawable/circle"
+                android:backgroundTint="#B0C4C4" />
+
+            <View
+                android:id="@+id/dot4"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_margin="6dp"
+                android:background="@drawable/circle"
+                android:backgroundTint="#B0C4C4" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivBottomArt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:scaleType="fitXY"
+            android:alpha="0.5"
+            android:src="@drawable/bottom_art"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

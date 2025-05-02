@@ -1,0 +1,14 @@
+<resources>
+    <style name="Theme.PersonalBudgetingApp" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/green_700</item>
+
+        <item name="colorAccent">@color/teal_200</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+        <item name="android:statusBarColor">#F4F9F9</item>
+        <item name="colorPrimaryDark">#F4F9F9</item>
+
+    </style>
+
+</resources>

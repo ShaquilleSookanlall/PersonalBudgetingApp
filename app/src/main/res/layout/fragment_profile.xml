@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#F4F9F9">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="24dp"
+            android:gravity="center_vertical"
+            android:layout_marginTop="40dp">
+
+            <ImageView
+                android:id="@+id/ivProfileImage"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:src="@drawable/ic_profile_placeholder"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/circle"
+                android:scaleType="centerCrop"
+                android:contentDescription="Profile Image" />
+
+            <TextView
+                android:id="@+id/tvUserEmail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="user@example.com"
+                android:textSize="16sp"
+                android:textColor="#212121"
+                android:textStyle="bold" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLogout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Logout"
+                android:backgroundTint="#D32F2F"
+                android:textColor="#FFFFFF"
+                android:icon="@drawable/ic_logout"
+                app:iconTint="#FFFFFF"
+                app:cornerRadius="24dp"
+                app:iconGravity="textStart" />
+        </LinearLayout>
+
+        <!-- Optional scrollable content can go here -->
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

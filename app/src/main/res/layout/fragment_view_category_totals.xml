@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#F5F5F5"
+        android:padding="24dp">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/tvCategoryTotalsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Category Totals"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="48dp" />
+
+        <!-- Start Date Field -->
+        <EditText
+            android:id="@+id/etStartDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Start Date (YYYY-MM-DD)"
+            android:background="@drawable/rounded_edittext"
+            android:padding="16dp"
+            android:textColor="#000000"
+            android:textColorHint="#757676"
+            android:focusable="false"
+            android:clickable="true"
+            android:inputType="none"
+            app:layout_constraintTop_toBottomOf="@id/tvCategoryTotalsTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="32dp" />
+
+        <!-- End Date Field -->
+        <EditText
+            android:id="@+id/etEndDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="End Date (YYYY-MM-DD)"
+            android:background="@drawable/rounded_edittext"
+            android:padding="16dp"
+            android:textColor="#000000"
+            android:textColorHint="#757676"
+            android:focusable="false"
+            android:clickable="true"
+            android:inputType="none"
+            app:layout_constraintTop_toBottomOf="@id/etStartDate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="24dp" />
+
+        <!-- Filter Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnFilterTotals"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Filter Totals"
+            android:textColor="#757676"
+            android:backgroundTint="#B0C4C4"
+            app:cornerRadius="32dp"
+            app:layout_constraintTop_toBottomOf="@id/etEndDate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="24dp"
+            android:padding="14dp" />
+
+        <!-- Results -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCategoryTotals"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/btnFilterTotals"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="24dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,11 @@
+<!-- res/drawable/wave_cutout.xml -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="400dp"
+    android:height="80dp"
+    android:viewportWidth="400"
+    android:viewportHeight="80">
+
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M0,0 C100,60 300,60 400,0 L400,80 L0,80 Z"/>
+</vector>
