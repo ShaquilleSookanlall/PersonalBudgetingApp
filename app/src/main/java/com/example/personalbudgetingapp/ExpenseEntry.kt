@@ -18,7 +18,7 @@ import kotlinx.parcelize.Parcelize
             onDelete = ForeignKey.CASCADE
         )
     ],
-    indices = [Index(value = ["categoryId"])]
+    indices = [Index(value = ["categoryId"]), Index(value = ["userId"])]
 )
 data class ExpenseEntry(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
@@ -26,5 +26,6 @@ data class ExpenseEntry(
     val description: String,
     val categoryId: Int,
     val amount: Double,
-    val photoUri: String?
+    val photoUri: String?,
+    val userId: String
 ) : Parcelable

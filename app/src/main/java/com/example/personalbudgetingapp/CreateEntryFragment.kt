@@ -14,15 +14,14 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.personalbudgetingapp.databinding.FragmentCreateEntryBinding
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 class CreateEntryFragment : Fragment() {
 
@@ -38,30 +37,23 @@ class CreateEntryFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentCreateEntryBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         db = AppDatabase.getDatabase(requireContext())
 
-        // Set up DatePicker for etDate
         binding.etDate.setOnClickListener {
             val calendar = Calendar.getInstance()
-            val year = calendar.get(Calendar.YEAR)
-            val month = calendar.get(Calendar.MONTH)
-            val day = calendar.get(Calendar.DAY_OF_MONTH)
-            DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
-                binding.etDate.setText(String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay))
-            }, year, month, day).show()
+            DatePickerDialog(requireContext(), { _, year, month, day ->
+                binding.etDate.setText(String.format("%04d-%02d-%02d", year, month + 1, day))
+            }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
         }
 
-        // Load categories into spinner
         CoroutineScope(Dispatchers.IO).launch {
             val categories = db.appDao().getAllCategories()
             withContext(Dispatchers.Main) {
@@ -90,6 +82,12 @@ class CreateEntryFragment : Fragment() {
             val description = binding.etDescription.text.toString().trim()
             val categoryName = binding.spinnerCategory.selectedItem?.toString()
             val amount = binding.etAmount.text.toString().toDoubleOrNull()
+            val userId = FirebaseAuth.getInstance().currentUser?.uid
+
+            if (userId == null) {
+                Toast.makeText(context, "User not logged in", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
             if (date.isEmpty() || description.isEmpty() || categoryName == null || amount == null) {
                 Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show()
@@ -104,7 +102,8 @@ class CreateEntryFragment : Fragment() {
                         description = description,
                         categoryId = category.id,
                         amount = amount,
-                        photoUri = photoUri?.toString()
+                        photoUri = photoUri?.toString(),
+                        userId = userId
                     )
                     db.appDao().insertExpenseEntry(entry)
                     withContext(Dispatchers.Main) {

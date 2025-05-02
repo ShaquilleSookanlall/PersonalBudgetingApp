@@ -1,6 +1,5 @@
 package com.example.personalbudgetingapp
 
-import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,20 +9,20 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.personalbudgetingapp.databinding.FragmentViewEntriesBinding
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
-import androidx.room.Delete
-
 
 class ViewEntriesFragment : Fragment() {
 
     private var _binding: FragmentViewEntriesBinding? = null
     private val binding get() = _binding!!
     private lateinit var db: AppDatabase
-    private lateinit var entries: List<ExpenseEntry>
+    private lateinit var auth: FirebaseAuth
+    private lateinit var userId: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,10 +35,20 @@ class ViewEntriesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         db = AppDatabase.getDatabase(requireContext())
+        auth = FirebaseAuth.getInstance()
+        userId = auth.currentUser?.uid ?: ""
+
+        if (userId.isEmpty()) {
+            Toast.makeText(requireContext(), "User not logged in", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         binding.rvEntries.layoutManager = LinearLayoutManager(context)
 
+        // Load all entries initially
         loadEntries("0000-01-01", "9999-12-31")
 
+        // Date pickers
         binding.etStartDate.setOnClickListener {
             val calendar = Calendar.getInstance()
             DatePickerDialog(requireContext(), { _, year, month, day ->
@@ -55,82 +64,29 @@ class ViewEntriesFragment : Fragment() {
         }
 
         binding.btnFilterEntries.setOnClickListener {
-            val startDate = binding.etStartDate.text.toString().trim()
-            val endDate = binding.etEndDate.text.toString().trim()
-            val finalStart = if (startDate.isEmpty()) "0000-01-01" else startDate
-            val finalEnd = if (endDate.isEmpty()) "9999-12-31" else endDate
-            loadEntries(finalStart, finalEnd)
+            val start = binding.etStartDate.text.toString().ifEmpty { "0000-01-01" }
+            val end = binding.etEndDate.text.toString().ifEmpty { "9999-12-31" }
+            loadEntries(start, end)
         }
     }
 
-    private fun loadEntries(start: String, end: String) {
+    private fun loadEntries(startDate: String, endDate: String) {
         CoroutineScope(Dispatchers.IO).launch {
-            entries = db.appDao().getEntriesInPeriod(start, end)
+            val entries = db.appDao().getEntriesInPeriod(startDate, endDate)
+                .filter { it.userId == userId }
+
             val categories = db.appDao().getAllCategories()
             withContext(Dispatchers.Main) {
                 if (entries.isEmpty()) {
-                    Toast.makeText(context, "No entries found", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "No entries found", Toast.LENGTH_SHORT).show()
                 }
-                binding.rvEntries.adapter = EntryAdapter(entries, categories) { entry ->
-                    showEntryDetails(entry, categories)
+                binding.rvEntries.adapter = EntryAdapter(entries, categories) { selectedEntry ->
+                    // Optional: Handle click for preview/edit
+                    Toast.makeText(context, "Clicked: ${selectedEntry.description}", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
-
-    private fun showEntryDetails(entry: ExpenseEntry, categories: List<Category>) {
-        val category = categories.find { it.id == entry.categoryId }?.name ?: "Unknown"
-        val photoMsg = if (!entry.photoUri.isNullOrEmpty()) "\nPhoto: Attached" else "\nPhoto: None"
-
-        val message = """
-            Description: ${entry.description}
-            Date: ${entry.date}
-            Category: $category
-            Amount: R%.2f$photoMsg
-        """.trimIndent().format(entry.amount)
-
-        AlertDialog.Builder(requireContext())
-            .setTitle("Expense Details")
-            .setMessage(message)
-            .setPositiveButton("Edit") { _, _ ->
-                editEntry(entry)
-            }
-            .setNegativeButton("Delete") { _, _ ->
-                confirmDelete(entry)
-            }
-            .setNeutralButton("Close", null)
-            .show()
-    }
-
-    private fun confirmDelete(entry: ExpenseEntry) {
-        AlertDialog.Builder(requireContext())
-            .setTitle("Confirm Deletion")
-            .setMessage("Are you sure you want to delete this entry?")
-            .setPositiveButton("Yes") { _, _ ->
-                deleteEntry(entry)
-            }
-            .setNegativeButton("No", null)
-            .show()
-    }
-
-    private fun deleteEntry(entry: ExpenseEntry) {
-        CoroutineScope(Dispatchers.IO).launch {
-            db.appDao().deleteExpenseEntry(entry)
-            withContext(Dispatchers.Main) {
-                Toast.makeText(requireContext(), "Entry deleted", Toast.LENGTH_SHORT).show()
-                loadEntries("0000-01-01", "9999-12-31")
-            }
-        }
-    }
-
-    private fun editEntry(entry: ExpenseEntry) {
-        val fragment = EditEntryFragment.newInstance(entry)
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, fragment)
-            .addToBackStack(null)
-            .commit()
-    }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
